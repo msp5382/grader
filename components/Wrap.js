@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import ReactTooltip from "react-tooltip";
 export default (props) => {
   const [height, setHeight] = useState(600);
@@ -18,14 +19,14 @@ export default (props) => {
                 </div>
                 {props.isShowModal && (
                   <>
-                    <div className="bg-gray-200 pt-2 text-xs h-72 overflow-scroll no-scrollbar">
+                    <div className="bg-gray-300 pt-2 text-xs h-72 overflow-scroll no-scrollbar">
                       <b className="px-1">
                         TESTCASE LIST{" "}
                         <span
                           onClick={props.addTestcase}
                           className="text-green-800 underline cursor-pointer"
                         >
-                          [add]
+                          [edit testcase]
                         </span>
                       </b>
                       {props.TestcaseDisp}

@@ -81,19 +81,7 @@ const endPythonInteractiveJob = (jobId) => {
 };
 const spawnWithJobId = (jobId) => spawn("python3", [jobId + "/main.py"]);
 const spawnWithInput = (jobId, i) =>
-  exec(
-    "python3 " +
-      jobId +
-      "/main.py " +
-      "< " +
-      jobId +
-      "/in_" +
-      i +
-      " > " +
-      jobId +
-      "/out_" +
-      i
-  );
+  exec(`python3 ${jobId}/main.py < ${jobId}/in_${i} > ${jobId}/out_${i}`);
 
 expressWebSocket(app, null, {
   perMessageDeflate: false,

@@ -13,7 +13,7 @@ export default function Editor({ onChange, code }) {
         height: window.innerHeight - 100,
       }}
       defaultValue={code}
-      fontSize={15}
+      fontSize={14}
       mode="python"
       theme="dracula"
       onChange={onChange}

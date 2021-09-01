@@ -1,9 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { run, pingServer } from "../services/repl";
 import dynamic from "next/dynamic";
+import Context from "../services/store";
 import Wrap from "../components/Wrap";
 import Toolbar from "../components/Toolbar";
-
+import TestcaseModal from "../components/TestcaseModal";
+import Testcase from "../components/Testcase";
 const XTerm = dynamic(() => import("../components/XTerm"), { ssr: false });
 const Ace = dynamic(() => import("../components/Ace"), {
   ssr: false,
@@ -13,47 +15,6 @@ const Ace = dynamic(() => import("../components/Ace"), {
     </div>
   ),
 });
-const Testcase = ({ idx, input, output }) => (
-  <div className="flex">
-    <div className="border-gray-500 border-r border-t border-b w-12">{idx}</div>
-    <div className="border-gray-500 border-r border-t border-b w-full">
-      {input}
-    </div>
-    <div className="border-gray-500 border-t border-b w-full">{output}</div>
-  </div>
-);
-
-const TestcaseAddingModal = () => {
-  return (
-    <div className="absolute w-screen h-screen flex flex-col">
-      <div className="z-50 h-3/6 m-auto max-w-lg rounded-lg w-11/12 border-gray-700 border-2 bg-gray-900 text-green-700">
-        <div className="flex p-3  justify-between">
-          <div className="font-bold">Edit Testcases</div>
-          <div className="text">
-            <ion-icon size="xl" name="close"></ion-icon>
-          </div>
-        </div>
-        <hr className="border-gray-600 border-1" />
-        <div className="p-3 text-gray-300 text-xs">
-          Write testcases you want or import from pdf
-        </div>
-        <div className="flex p-3 text-gray-400">
-          <div className="w-12">#1</div>
-          <div className="w-full h-full border-t border-l border-b border-gray-400">
-            <span onChange={console.log} role="textbox" contenteditable="true">
-              aaaaaaa
-            </span>
-          </div>
-          <div className="w-full h-full border border-gray-400">a</div>
-        </div>
-        <div className="justify-end flex pr-3">
-          <button className="font-bold">[add]</button>
-        </div>
-      </div>
-      <div className="z-40 w-screen h-screen fixed backdrop-blur-xl"></div>
-    </div>
-  );
-};
 
 export default function Home() {
   const starterCode = `#เขียนโค้ดเลย!
@@ -63,10 +24,10 @@ print("Hello",input("name?"))`;
   let feeder = useRef(() => {});
   let clearTerminal = useRef(() => {});
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isShowTestcaseModal, setIsShowTestcaseModal] = useState(false);
   const [code, setCode] = useState(starterCode);
-  const [testcases, setTestcases] = useState([
-    { idx: 1, input: "aaaa", output: "bbbb" },
-  ]);
+  const { testcases, setTestcases } = useContext(Context);
+
   const [connectionStatus, setConnectionStatus] = useState(false);
 
   useEffect(() => {
@@ -99,17 +60,18 @@ print("Hello",input("name?"))`;
   };
 
   const sendData = (data) => {
-    console.log("send", data);
     input.current(data + "\n");
   };
 
   const registerToTerminal = (_feeder) => {
-    console.log("feeder", feeder);
     feeder.current = _feeder;
   };
   return (
     <>
-      {/* <TestcaseAddingModal></TestcaseAddingModal> */}
+      {isShowTestcaseModal && (
+        <TestcaseModal {...{ setIsShowTestcaseModal }}></TestcaseModal>
+      )}
+
       <Wrap
         isShowModal={isShowModal}
         TestcaseBottomDisp={testcases.map((testcase) => (
@@ -119,7 +81,7 @@ print("Hello",input("name?"))`;
           <Testcase {...props} />
         ))}
         isConnected={connectionStatus}
-        addTestcase={() => {}}
+        addTestcase={() => setIsShowTestcaseModal(true)}
         blur={false}
       >
         <Toolbar
