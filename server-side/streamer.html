@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/axios@0.21.1/dist/axios.min.js"></script>
+    <script>
+      const c = `#เขียนโค้ดเลย!
+print("Hello",input("name?"))`;
+      axios.post("http://localhost:5200/create/", { code: c }).then((res) => {
+        webSocket = new WebSocket(
+          "ws://localhost:5200/connect?jobId=" + res.data.jobId
+        );
+        webSocket.onopen = function (event) {
+          console.log(event);
+        };
+        webSocket.onmessage = async function (event) {
+          console.log(JSON.parse(event.data).out);
+          webSocket.send("Meen\n");
+        };
+      });
+    </script>
+  </head>
+  <body bgcolor="black"></body>
+</html>

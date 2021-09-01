@@ -2,13 +2,20 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:repl": "next dev | node ./server-side",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
+    "ace-builds": "^1.4.12",
+    "axios": "^0.21.1",
+    "ionicons": "^5.5.3",
     "next": "latest",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-ace": "^9.4.3",
+    "react-dom": "^17.0.2",
+    "react-tooltip": "^4.2.21",
+    "xterm": "^4.13.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.2.6",
